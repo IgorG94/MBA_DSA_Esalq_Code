@@ -1,0 +1,13 @@
+"0","ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_text_repel(aes(x = t, y = cumulative_cases, label = cumulative_cases), 
+                  color = ""black"", size = 2) +
+  labs(x = ""Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado"",
+       y = ""Casos Cumulativos"",
+       color = ""País"") +
+  theme_bw()
+"
+"2","Warning:"
+"2"," ggrepel: 1255 unlabeled data points (too many overlaps). Consider increasing max.overlaps
+"

@@ -1,0 +1,692 @@
+---
+title: "Elaboração de Gráficos com o Pacote ggplot2"
+author: "Rafael de Freitas Souza"
+output:
+  html_document: default
+---
+
+Para a elaboração de gráficos, utilizaremos as funções do pacote ggplot2. Em regra, essas funções são de fácil assimilação após pouco tempo de treino.
+
+De modo geral, a elaboração de um gráfico com o pacote ggplot2 não costuma ser uma tarefa difícil, desde que o aluno tenha em mente três coisas:
+
+* Uma ideia clara de qual gráfico se quer elaborar;
+
+* O entendimento de que as funções do pacote ggplot2 construirão um gráfico a partir de, necessariamente, um data frame;
+
+* A compreensão de que sempre deverá ser comandada, no mínimo, um tipo de geometria.
+
+Obviamente, a depender das razões do discente, pode haver gráficos que dependerão de um nível alto de erudição no R. Porém, para a maior das necessidades desse curso, o aluno encontrará soluções interessantes nos códigos abaixo.
+
+Dito isso, vamos comandar os pacotes necessários para essa aula:
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(plotly)
+library(ggrepel)
+library(PerformanceAnalytics)
+library(reshape2)
+```
+
+
+# Gráfico de Barras
+
+Vamos carregar nossa base de dados que será utilizada para a construção de um gráfico de barras.
+```{r}
+load("perfil_investidor.RData")
+```
+
+Aplicando a sintaxe básica do ggplot2 à base de dados:
+```{r echo=FALSE}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil))
+```
+
+Note que a nomenclatura dos perfis foi ordenada de forma alfabética. Para alterar a situação, podemos utilizar a função factor(), para redefinir a ordem dos levels:
+```{r}
+perfil_investidor$perfil <- factor(perfil_investidor$perfil,
+                                   levels = c("Conservador", 
+                                              "Moderado", 
+                                              "Agressivo"))
+```
+
+Utilizando, mais uma vez, a sintaxe básica do ggplot2 à base de dados:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil))
+```
+
+Adicionando informações ao nosso gráfico:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil)) +
+  labs(title = "Perfil dos Investidores do Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade")
+```
+
+
+Adicionando detalhamentos ao gráfico:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil)) +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021")
+```
+
+
+Adicionando cores à plotagem:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), fill = "darkorchid") +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021")
+```
+
+Para verificar as cores possíveis de serem declaradas com a linguagem básica do R, podemos acessar o seguinte sítio eletrônico:
+
+[Espécie de catálogo de cores para gráficos no R](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+
+Alterando as cores:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), fill = "orange") +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021")
+```
+
+Adicionando bordas:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), color = "darkorchid", fill = "orange") +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021")
+```
+
+Modificando o fundo dos gráficos:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), color = "darkorchid", fill = "orange") +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021") +
+  theme_classic()
+```
+
+Adicionando labels:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), color = "darkorchid", fill = "orange") +
+  geom_label(aes(x = perfil, label = ..count..), stat = "count") +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021") +
+  theme_light()
+```
+
+Reposicionando as labels:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), color = "darkorchid", fill = "orange") +
+  geom_text(aes(x = perfil, label = ..count..), 
+            stat = "count", vjust = 1) +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021") +
+  theme_light()
+```
+
+Rotacionando um gráfico:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = perfil), color = "darkorchid", fill = "orange") +
+  geom_text(aes(x = perfil, label = ..count..), stat = "count", hjust = -0.5) +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021") +
+  coord_flip() +
+  theme_light()
+```
+
+Invertendo as ordens das categorias:
+```{r}
+ggplot(data = perfil_investidor) +
+  geom_bar(aes(x = fct_rev(perfil)), color = "darkorchid", fill = "orange") +
+  geom_text(aes(x = perfil, label = ..count..), 
+            stat = "count", hjust = -1) +
+  labs(title = "Perfil dos Investidores",
+       subtitle = "Banco X",
+       x = "Perfil do Investidor",
+       y = "Quantidade",
+       caption = "Período: 2021") +
+  coord_flip() +
+  theme_light()
+```
+
+# Histograma
+
+Vamos utilizar alguns dados sobre os municípios de São Paulo para essa nova demanda:
+```{r}
+load("dados_sp.RData")
+```
+
+Aplicando a sintaxe básica do ggplot2:
+```{r}
+ggplot(data = dados_sp) +
+  geom_histogram(aes(x = idh))
+```
+
+
+Colorindo o gráfico:
+```{r}
+ggplot(data = dados_sp) +
+  geom_histogram(aes(x = idh), fill = "darkorchid")
+```
+
+
+Alterando o plano de fundo:
+```{r}
+ggplot(data = dados_sp) +
+  geom_histogram(aes(x = idh), fill = "darkorchid") +
+  theme_minimal()
+```
+
+
+Adicionando contornos e nomes dos eixos:
+```{r}
+ggplot(data = dados_sp) +
+  geom_histogram(aes(x = idh), fill = "darkorchid", color = "black") +
+  labs(x = "IDH dos Municípios de SP",
+       y = "Frequência") +
+  theme_minimal()
+```
+
+
+Alterando a quantidade de caixas do histograma:
+```{r}
+ggplot(data = dados_sp) +
+  geom_histogram(aes(x = pib), fill = "darkorchid",
+                 color = "black", bins = 100) +
+  labs(x = "PIB dos Municípios de SP",
+       y = "Frequência") +
+  theme_minimal()
+```
+
+# Gráfico de Pontos
+
+Para esse desafio, utilizaremos dados sobre os bairros da capital de São Paulo:
+```{r}
+load("atlas_ambiental.RData")
+```
+
+Aplicando a sintaxe básica do ggplot2:
+```{r}
+ggplot(atlas_ambiental) +
+  geom_point(aes(x = renda, y = escolaridade))
+```
+
+Estratificando informações - o uso do argumento size:
+```{r}
+ggplot(atlas_ambiental) +
+  geom_point(aes(x = renda, y = escolaridade, size = idade))
+```
+
+Estratificando informações - o uso do argumento color:
+```{r}
+ggplot(atlas_ambiental) +
+  geom_point(aes(x = renda, y = escolaridade, 
+                 size = idade, color = favel < 6))
+```
+
+Estratificando informações - o uso do argumento shape:
+```{r}
+ggplot(atlas_ambiental) +
+  geom_point(aes(x = renda, y = escolaridade, 
+                 size = idade, color = favel < 6, 
+                 shape = mortalidade > 18)) +
+  labs(title = "Indicadores dos Distritos do Município de São Paulo",
+       x = "Renda",
+       y = "Escolaridade") +
+  theme_bw()
+```
+
+Traçando uma linha de tendências:
+```{r}
+ggplot(atlas_ambiental) +
+  geom_point(aes(x = renda, y = escolaridade, 
+                 size = idade, color = favel < 6, 
+                 shape = mortalidade > 18)) +
+  geom_smooth(aes(x = renda, y = escolaridade), 
+              method = "loess", se = FALSE) +
+  labs(title = "Indicadores dos Distritos do Município de São Paulo",
+       x = "Renda",
+       y = "Escolaridade") +
+  theme_bw()
+```
+
+Aproveitando o assunto "tendências", vamos seguir explorando as capacidades do R com uma nova base de dados sobre a corrupção no mundo (Fisman & Miguel, 2007):
+```{r}
+load("fisman_miguel.RData")
+```
+
+Notem que seria interessante plotar, por exemplo, o número de violações de trânsito em função do índice de corrupção do país. Vamos tentar?
+
+```{r}
+ggplot(fisman_miguel) +
+  geom_point(aes(x = corruption, y = violations)) +
+  geom_smooth(aes(x = corruption, y = violations), 
+              se = FALSE, 
+              method = "loess") +
+  geom_text(aes(x = corruption, y = violations, label = code))
+```
+
+Note que há dois problemas principais: 1) Há muitos países sem violações reportadas, ou com um baixo número de violações, e países com um número alto de violações reportadas, o que deixaria o gráfico com problemas de escala; 2) Haveria uma dupla contagem, porque os países foram verificados antes e depois da imposição da nova lei de NY.
+
+Vamos tentar mitigar o primeiro problema, padronizando os valores da variável violations
+```{r}
+ggplot(fisman_miguel) +
+  geom_point(aes(x = corruption, y = log(violations))) +
+  geom_smooth(aes(x = corruption, y = log(violations)), 
+              se = F, 
+              method = "loess") +
+  geom_text(aes(x = corruption, y = log(violations), label = code))
+```
+Agora, podemos tentar mitigar o segundo problema com alguma função de facet:
+```{r}
+ggplot(fisman_miguel) +
+  geom_point(aes(x = corruption, y = log(violations))) +
+  geom_smooth(aes(x = corruption, y = log(violations)), 
+              se = F, 
+              method = "loess") +
+  geom_text(aes(x = corruption, y = log(violations), label = code)) +
+  facet_wrap(~post) +
+  theme_bw()
+```
+
+Note um terceiro problema não identificado anteriormente: a sobreposição de labels. Podemos tentar resolver a situação com a função geom_text_repel(), do pacote ggrepel:
+```{r}
+ggplot(fisman_miguel) +
+  geom_point(aes(x = corruption, y = log(violations))) +
+  geom_smooth(aes(x = corruption, y = log(violations)), 
+              se = F, method = "loess") +
+  geom_text_repel(aes(x = corruption, y = log(violations), label = code)) +
+  facet_wrap(~post) +
+  theme_bw()
+```
+
+# Gráfico de Linhas
+
+Para os nossos gráficos de linhas, vamos utilizar dados da atual pandemia no Brasil, Índia, Rússia e Estados Unidos da América:
+```{r}
+load("covid_110521.RData")
+```
+
+Aplicando a sintaxe básica do ggplot2:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases))
+```
+
+Note que não informamos para o ggplot2 que cada linha deveria representar um país. Assim:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country))
+```
+
+Adicionando informações e deixando o gráfico mais elegante:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+O gráfico anterior poderia ser mais informativo, visto que, por exemplo, compara países com tamanhos populacionais distintos. Portanto, a magnitude das infecções também é distinta. Uma possibilidade de suavização da situação poderia ser a padronização da variável 'cumulative_cases'. No gráfico a seguir, padronizamos os casos cumulativos de cada país numa escala log10:
+
+```{r}
+covid_110521["log_ccases"] <- log10(covid_110521$cumulative_cases)
+```
+
+O gráfico resultante é o seguinte:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = log_ccases, color = country)) +
+  geom_point(aes(x = t, y = log_ccases, color = country)) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Log10 Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+
+Por mais que dê para se extrair alguns insights interessantes do gráfico anterior, alguém poderia dizer que seria melhor, por exemplo, utilizar uma proporção da população infectada em razão do tempo passado:
+```{r}
+covid_110521["pop_ccases"] <- covid_110521$cumulative_cases / 
+  covid_110521$pop
+```
+
+O resultado visual vem abaixo:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = pop_ccases, color = country)) +
+  geom_point(aes(x = t, y = pop_ccases, color = country)) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+
+Ainda assim, os gráficos não trazem uma informação importante: os valores dos casos cumulativos por dia e por país. Em regra, no ggplot, podemos utilizar a geometria 'text' para isso:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_text(aes(x = t, y = cumulative_cases, label = cumulative_cases), 
+            color = "black", size = 2) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+
+E se deslocássemos as labels dos valores dos casos cumulativos?
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_text(aes(x = t, y = cumulative_cases, label = cumulative_cases), 
+            color = "black", size = 2, vjust = -1) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+
+Ainda está caótico, certo? E se alterássemos o ângulo de exibição das labels?
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_text(aes(x = t, y = cumulative_cases, label = cumulative_cases), 
+            color = "black", size = 2, vjust = -1, angle = 45) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+
+Continua péssimo. São muitos dias e muitos países analisados ao mesmo tempo! 
+
+A função geom_text_repel() do pacote 'ggrepel', por vezes resolve o problema:
+```{r}
+ggplot(covid_110521) +
+  geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+  geom_text_repel(aes(x = t, y = cumulative_cases, label = cumulative_cases), 
+                  color = "black", size = 2) +
+  labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+       y = "Casos Cumulativos",
+       color = "País") +
+  theme_bw()
+```
+
+Dá até vontade de desistir, a gente sabe! Em casos extremos, como no exemplo apresentado, talvez seja melhor omitir as labels e deixar o gráfico interativo com o usuário da informação. Podemos fazer isso com a função ggplotly() do pacote 'plotly':
+```{r}
+ggplotly(
+  ggplot(covid_110521) +
+    geom_line(aes(x = t, y = cumulative_cases, color = country)) +
+    geom_point(aes(x = t, y = cumulative_cases, color = country)) +
+    labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+         y = "Casos Cumulativos",
+         color = "País") +
+    theme_bw()
+)
+```
+
+Agora passa passar o mouse pelo gráfico para ter acesso às informações necessárias!
+
+Caso quiséssemos fazer uma análise diária, bastaria mudar a variável de interesse:
+```{r}
+ggplotly(
+  ggplot(covid_110521) +
+    geom_line(aes(x = t, y = daily_cases, color = country)) +
+    geom_point(aes(x = t, y = daily_cases, color = country)) +
+    labs(x = "Tempo em dias desde o primeiro caso oficial do Sars-Cov-2 reportado",
+         y = "Casos Diários",
+         color = "País") +
+    theme_bw()
+)
+```
+
+# Mapas de Calor
+
+Nosso principal exemplo para gráficos de calor para hoje será a respeito da relação entre variáveis. Entre variáveis métricas, essas relações se chamam correlações, cuja fórmula do coeficiente de correlação de Pearson segue a seguir:
+
+$\rho = \frac{\sum_{i=1}^{n}(X_{i}-\bar{X}).(Y_{i}-\bar{Y})}{\sqrt{\sum_{i=1}^{n}(X_{i}-\bar{X})^2.\sqrt{\sum_{i=1}^{n}(Y_{i}-\bar{Y})^2}}}$
+
+Assim, primeiro vamos observar alguns gráficos correlacionais com a função chart.Correlation() do pacote 'PerformanceAnalytics":
+```{r}
+chart.Correlation(atlas_ambiental[, 3:11], histogram = T)
+```
+Para criarmos um gráfico de calor a respeito das correlações da nossa base de dados, o primeiro passo é estabelecer uma Matriz de Correlações. Podemos fazer isso utilizando a função cor() da linguagem básica do R:
+```{r}
+matriz_correlacoes <- cor(atlas_ambiental[, 3:11])
+
+matriz_correlacoes
+```
+Para o caso dos gráficos de calor, é melhor que a base de dados esteja no formato long em vez do formato wide. Podemos alterar isso com a função melt() do pacote 'reshape2'
+```{r}
+correlacoes <- melt(matriz_correlacoes)
+
+head(correlacoes)
+tail(correlacoes)
+```
+
+Aqui, nós vamos alterar os nomes das variáveis do nosso novo objeto que demos o nome de 'correlacoes':
+```{r}
+names(correlacoes) <- c("var1", "var2", "correlacao")
+
+correlacoes
+```
+Agora sim, aplicando a sintaxe básica do ggplot2, temos:
+```{r}
+ggplot(correlacoes) +
+  geom_tile(aes(x = var1, y = var2, fill = correlacao))
+```
+
+Podemos remover os nomes dos eixos do gráfico da seguinte forma:
+```{r}
+ggplot(correlacoes) +
+  geom_tile(aes(x = var1, y = var2, fill = correlacao)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = "Correlações")
+```
+
+Podemos criar um gradiente de cores, da seguinte maneira:
+```{r}
+ggplot(correlacoes) +
+  geom_tile(aes(x = var1, y = var2, fill = correlacao)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = "Correlações") +
+  scale_fill_gradient2(low = "#440154FF", 
+                       mid = "white", 
+                       high = "#FDE725FF",
+                       midpoint = 0)
+```
+
+Podemos incluir os valores de cada correlação em cada quadrícula:
+```{r}
+ggplot(correlacoes) +
+  geom_tile(aes(x = var1, y = var2, fill = correlacao)) +
+  geom_text(aes(x = var1, y = var2, label = correlacao), size = 2) +
+  labs(x = NULL,
+       y = NULL,
+       fill = "Correlações") +
+  scale_fill_gradient2(low = "darkblue", 
+                       mid = "white", 
+                       high = "darkred",
+                       midpoint = 0)
+```
+
+Os valores das correlações estão muito extensos, certo? Basta aplicarmos um arredondamento a eles com a função round():
+```{r}
+ggplot(correlacoes) +
+  geom_tile(aes(x = var1, y = var2, fill = correlacao)) +
+  geom_text(aes(x = var1, y = var2, label = round(correlacao, digits = 3)), 
+            size = 3) +
+  labs(x = NULL,
+       y = NULL,
+       fill = "Correlações") +
+  scale_fill_gradient2(low = "darkblue", 
+                       mid = "white", 
+                       high = "darkred",
+                       midpoint = 0) +
+  theme_bw()
+```
+
+Lembra da ggplotly() do pacote 'plotly'? Pois é! Podemos aplicá-la aqui também!
+```{r}
+ggplotly(
+  ggplot(correlacoes) +
+    geom_tile(aes(x = var1, y = var2, fill = correlacao)) +
+    geom_text(aes(x = var1, y = var2, 
+                  label = round(correlacao, digits = 3)), 
+              size = 3) +
+    labs(x = NULL,
+         y = NULL,
+         fill = "Correlações") +
+    scale_fill_gradient2(low = "darkblue", 
+                         mid = "white", 
+                         high = "darkred",
+                         midpoint = 0) +
+    theme_bw()
+)
+```
+
+Os nomes das variáveis estão sobrepostos no eixo das abcissas. Podemos resolver isso com argumentos à função theme():
+```{r}
+ggplot(correlacoes) +
+    geom_tile(aes(x = var1, y = var2, fill = correlacao)) +
+    geom_text(aes(x = var1, y = var2, label = round(correlacao, 
+                                                    digits = 3)), 
+              size = 3) +
+    labs(x = NULL,
+         y = NULL,
+         fill = "Correlações") +
+    scale_fill_gradient2(low = "darkblue", 
+                         mid = "white", 
+                         high = "darkred",
+                         midpoint = 0) +
+    theme(panel.background = element_rect("white"),
+        panel.grid = element_line("grey95"),
+        panel.border = element_rect(NA),
+        legend.position = "bottom",
+        axis.text.x = element_text(angle = 90))
+```
+
+# Boxplot
+
+No R, para construir alguns boxplots, é melhor que utilizemos nossas bases de dados no formato long. Basta utilizarmos a função melt() do pacote 'reshape2':
+```{r}
+atlas_long <- melt(atlas_ambiental[, 2:11], id.vars = "distritos")
+
+head(atlas_long)
+tail(atlas_long)
+```
+
+Agora sim, podemos plotar nossos dados:
+```{r}
+ggplot(atlas_long) +
+  geom_boxplot(aes(x = variable, y = value, fill = variable))
+```
+
+A visualização ficou diferente do esperado, não é? Você consegue dizer a razão disso?
+
+O problema está na comparação de variáveis com tipos distintos de magnitude.
+
+Podemos resolver a situação padronizando as variáveis com o procedimento zscores, por exemplo:
+
+$zX_{i}=\frac{X_{i}-\bar{X}}{\sigma}$
+
+```{r}
+atlas_padronizado <- atlas_ambiental
+
+atlas_padronizado[, 3:11] <- scale(atlas_padronizado[, 3:11])
+
+head(atlas_padronizado)
+tail(atlas_padronizado)
+```
+
+Como já visto, devemos transformar nossa base de dados em formato long:
+```{r}
+atlas_padronizado_long <- melt(atlas_padronizado[, 2:11],
+                               id.vars = "distritos")
+
+head(atlas_padronizado_long)
+tail(atlas_padronizado_long)
+```
+
+Vamos tentar, mais uma vez, utilizar a sintaxe básica do ggplot2 para a construção de boxplots:
+```{r}
+ggplot(atlas_padronizado_long) +
+  geom_boxplot(aes(x = variable, y = value, fill = variable))
+```
+
+Podemos deixar o gráfico mais elegante nomeando os eixos, alterando o plano de fundo e removendo a legenda:
+```{r}
+ggplot(atlas_padronizado_long) +
+  geom_boxplot(aes(x = variable, y = value, fill = variable)) +
+  labs(x = "Variáveis",
+       y = "Valores") +
+  theme(panel.background = element_rect("white"),
+        panel.grid = element_line("grey95"),
+        panel.border = element_rect(NA),
+        legend.position = "none",
+        axis.text.x = element_text(angle = 90))
+```
+
+Com objetivos puramente didáticos, podemos visualizar cada observação de cada variável padronizada da seguinte maneira:
+```{r}
+ggplot(atlas_padronizado_long) +
+  geom_boxplot(aes(x = variable, y = value, fill = variable)) +
+  geom_point(aes(x = variable, y = value), alpha = 0.1) +
+  labs(x = "Variáveis",
+       y = "Valores") +
+  theme(panel.background = element_rect("white"),
+        panel.grid = element_line("grey95"),
+        panel.border = element_rect(NA),
+        legend.position = "none",
+        axis.text.x = element_text(angle = 90))
+```
+
+E sim! Podemos deixas nossos boxplots interativos com ajuda do pacote 'plotly'
+```{r}
+ggplotly(
+  ggplot(atlas_padronizado_long) +
+    geom_boxplot(aes(x = variable, y = value, fill = variable)) +
+    labs(x = "Variáveis",
+         y = "Valores") +
+    theme_bw()
+)
+```

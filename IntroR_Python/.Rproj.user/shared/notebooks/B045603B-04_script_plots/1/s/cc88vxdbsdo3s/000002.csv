@@ -1,0 +1,9 @@
+"0","ggplot(data = dados_sp) +
+  geom_histogram(aes(x = idh))
+"
+"1","function (x, y, ...) 
+"
+"1","ggplot(data = dados_sp) +
+"
+"1","  geom_histogram(aes(x = idh))
+"

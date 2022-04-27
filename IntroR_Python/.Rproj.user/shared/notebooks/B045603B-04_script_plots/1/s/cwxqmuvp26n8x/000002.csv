@@ -1,0 +1,9 @@
+"0","ggplot(fisman_miguel) +
+  geom_point(aes(x = corruption, y = violations)) +
+  geom_smooth(aes(x = corruption, y = violations), 
+              se = FALSE, 
+              method = ""loess"") +
+  geom_text(aes(x = corruption, y = violations, label = code))
+"
+"2","`geom_smooth()` using formula 'y ~ x'
+"

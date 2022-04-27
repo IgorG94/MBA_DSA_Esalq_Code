@@ -1,0 +1,6 @@
+"companies","employees","stock_exchange","brazil_hq","ceo"
+"Empresa A",100,FALSE,NA,NA
+NA,5000,TRUE,0,"daniel"
+"Empresa C",230,NA,1,"carlos"
+"Empresa D",12000,TRUE,0,"carla"
+"Empresa E",1700,TRUE,0,"solange"

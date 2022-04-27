@@ -1,0 +1,19 @@
+"0","ggplot(atlas_ambiental) +
+  geom_point(aes(x = renda, y = escolaridade, 
+                 size = idade, color = favel < 6, 
+                 shape = mortalidade > 18)) +
+  geom_smooth(aes(x = renda, y = escolaridade), 
+              method = ""loess"", se = FALSE) +
+  labs(title = ""Indicadores dos Distritos do Município de São Paulo"",
+       x = ""Renda"",
+       y = ""Escolaridade"") +
+  theme_bw()
+"
+"2","`geom_smooth()` using formula 'y ~ x'
+"
+"2","Warning: stack imbalance in 'lazyLoadDBfetch', 87 then 85
+"
+"2","Warning:"
+"2"," Computation failed in `stat_smooth()`:
+'The name of the package for a meta-data object' deve ser uma string única (foi obtido um objeto da classe ""call"")
+"
