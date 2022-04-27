@@ -1,6 +1,0 @@
-"0","ggplot(data = dados_sp) +
-  geom_histogram(aes(x = idh))
-"
-"2","`stat_bin()` using `bins = 30`. Pick better value with
-`binwidth`.
-"

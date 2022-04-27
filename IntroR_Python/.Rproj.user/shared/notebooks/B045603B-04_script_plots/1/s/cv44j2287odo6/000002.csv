@@ -1,8 +1,0 @@
-"0","ggplot(data = dados_sp) +
-  geom_histogram(aes(x = idh), fill = ""darkorchid"", color = ""black"") +
-  labs(x = ""IDH dos Municípios de SP"",
-       y = ""Frequência"") +
-  theme_minimal()
-"
-"2","`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-"
